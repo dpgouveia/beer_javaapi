@@ -1,7 +1,8 @@
 package personal.projects.beerapi.Beer;
 
-import java.util.List;
+import java.io.Console;
 
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,6 +17,7 @@ public class BeerController {
 
     @Autowired private Environment env;
     @Autowired private BeerService beerService;
+    private final Gson gson = new Gson();
 
     @GetMapping(path = "/beerapi")
     public String home() {
@@ -23,27 +25,25 @@ public class BeerController {
     }
 
     @GetMapping(path = "/beerapi/read")
-    public ResponseEntity<List<Beer>> read() {
+    public ResponseEntity<String> read() {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(beerService.getBeers());
+            return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(beerService.getBeers()));
         } catch(EmptyResultDataAccessException ex) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(gson.toJson("List of beer is empty!"));
         } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Erro durante o processamento do enpoint BeerApi.read(). Causa: " + ex.getMessage()));
         }
     }
 
     @GetMapping(path = "/beerapi/read/{beerId}")
-    public ResponseEntity<Beer> read(@PathVariable(name = "beerId") Integer beerId) {
+    public ResponseEntity<String> read(@PathVariable(name = "beerId") Integer beerId) {
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(beerService.getBeer(beerId));
+            return ResponseEntity.status(HttpStatus.OK).body(gson.toJson(beerService.getBeer(beerId)));
         } catch(EmptyResultDataAccessException ex) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(gson.toJson("Beer not found with id " + beerId));
         }
         catch (RuntimeException ex) {
-            ex.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(gson.toJson("Erro durante o processamento do enpoint BeerApi.read(beerId). Causa: " + ex.getMessage()));
         }
     }
     
