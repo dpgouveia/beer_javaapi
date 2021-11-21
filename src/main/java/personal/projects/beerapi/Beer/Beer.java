@@ -10,7 +10,15 @@ public class Beer {
 
     public Beer() {
     }
-    
+
+    public Beer(Integer id, String name, String tagline, String description, String image) {
+        this.id = id;
+        this.name = name;
+        this.tagline = tagline;
+        this.description = description;
+        this.image = image;
+    }
+
     public Integer getId() {
         return id;
     }

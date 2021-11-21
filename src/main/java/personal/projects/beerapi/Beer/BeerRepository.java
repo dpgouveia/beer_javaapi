@@ -1,5 +1,6 @@
 package personal.projects.beerapi.Beer;
 
+import java.sql.PreparedStatement;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,24 @@ import org.springframework.stereotype.Repository;
 public class BeerRepository {
 
     @Autowired private JdbcTemplate jdbcTemplate;
+    
     private final String queryGetBeers = "  SELECT *                   " +
                                          "    FROM nodejs_beer.beers b " +
                                          "ORDER BY b.id                ";
 
+    private final String queryGetBeer = " select *                   " +
+                                        "   from nodejs_beer.beers b " +
+                                        "  where b.id = ?            ";
+
     public List<Beer> getBeers() {
-        List<Beer> beersList = jdbcTemplate.query(queryGetBeers, BeanPropertyRowMapper.newInstance(Beer.class));
-        return beersList;
+        return jdbcTemplate.query(queryGetBeers, BeanPropertyRowMapper.newInstance(Beer.class));
+    }
+
+    public Beer getBeer(Integer beerId) {
+        return jdbcTemplate.queryForObject(
+                                    queryGetBeer, 
+                                    (rs, rowNum) -> new Beer(rs.getInt("id"), rs.getString("name") , rs.getString("tagline"), rs.getString("description"), rs.getString("image"))
+                                    , beerId);
     }
     
 }
