@@ -17,5 +17,17 @@ public class BeerService {
     public Beer getBeer(Integer beerId) {
         return beerRepository.getBeer(beerId);
     }
+
+    public Integer createBeer(Beer beer) {
+        return beerRepository.createBeer(beer);
+    }
+
+    public Integer updateBeer(Integer beerId, Beer beer) {
+        return beerRepository.updateBeer(beerId, beer);
+    }
+
+    public Integer deleteBeer(Integer beerId) {
+        return beerRepository.deleteBeer(beerId);
+    }
     
 }

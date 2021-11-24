@@ -11,7 +11,7 @@ public class BeerApiApplication {
 
 	public static void main(String[] args) {
 		new SpringApplicationBuilder()	
-			.profiles("dev")
+			.profiles("dev") // para deploy via esteira continua melhor fazer por variaveis de ambiente
 			//.profiles("qa")
 			.sources(BeerApiApplication.class)
 			.run(args);
